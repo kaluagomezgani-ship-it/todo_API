@@ -20,12 +20,27 @@ app.get("/tasks/:id",(req,res)=>{
     })
 })
 app.post("/tasks",(req,res)=>{
-    const {id,task,status}=req.body
+    const {id,task,status}=req.body;
     pool.query("INSERT INTO tasks (id,task,status) VALUES ($1,$2,$3)",[id,task,status],(err,results)=>{
         if(err) throw err
         res.status(200).json({"message":"successfully saved task"})
     })
 })
+app.put("/tasks/update/:id",(req,res)=>{
+    const id=req.params.id;
+    const status=true;
+
+    pool.query("UPDATE tasks SET status=$1 WHERE id=$2", [status,id],(err,results)=>{
+        if (err){
+            console.log(err);
+            return res.status(500).json({"error": "internal server error"})
+        }
+        res.status(200).json({"messege" : "status updated"})
+    } )
+    
+})
+
+
 app.listen("3000",()=>{
     console.log("helloworld")
 })
